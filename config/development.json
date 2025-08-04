@@ -1,0 +1,23 @@
+{
+  "server": {
+    "port": 3000,
+    "host": "localhost",
+    "livereload": true
+  },
+  "paths": {
+    "public": "public",
+    "src": "src",
+    "assets": "src/assets",
+    "styles": "src/styles",
+    "scripts": "src/scripts"
+  },
+  "features": {
+    "hotReload": true,
+    "sourceMap": true,
+    "minification": false
+  },
+  "api": {
+    "baseUrl": "http://localhost:3000",
+    "timeout": 5000
+  }
+}

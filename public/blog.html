@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="../src/assets/icons/favicon.jpg" type="image/png" />
+    <title>个人博客 - 博客文章</title>
+    <link rel="stylesheet" href="../src/styles/style.css" />
+  </head>
+  <body>
+    <div class="parallax-background" id="parallax1"></div>
+    
+    <!-- 导航栏 -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="nav-logo">
+          <h2>我的博客</h2>
+        </div>
+        <ul class="nav-menu">
+          <li class="nav-item">
+            <a href="../index.html" class="nav-link">首页</a>
+          </li>
+          <li class="nav-item">
+            <a href="blog.html" class="nav-link active">博客</a>
+          </li>
+          <li class="nav-item">
+            <a href="portfolio.html" class="nav-link">项目经历</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- 主要内容区域 -->
+    <main class="main-content">
+      <div class="content">
+        <h1>我的博客</h1>
+        <p class="page-subtitle">记录技术分享、生活感悟和项目总结</p>
+        
+        <!-- 搜索和分类 -->
+        <div class="blog-controls">
+          <div class="search-controls">
+            <div class="search-input-wrapper">
+              <input type="text" placeholder="搜索文章..." id="search-input" class="search-input">
+              <span class="search-icon">🔍</span>
+            </div>
+            <select id="category-select" class="category-select" onchange="filterByCategory()">
+              <option value="all">所有分类</option>
+              <option value="tech">技术分享</option>
+              <option value="life">生活感悟</option>
+              <option value="project">项目总结</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="blog-list" id="blog-list">
+          <article class="blog-item" data-category="tech">
+            <div class="blog-meta">
+              <span class="category-tag tech">技术分享</span>
+              <span class="blog-date">2024-01-15</span>
+            </div>
+            <h3>我的第一篇博客</h3>
+            <p class="blog-excerpt">这是我博客的第一篇文章，记录了我开始写博客的初衷和想法。在这个数字化时代，拥有一个属于自己的博客空间变得越来越重要...</p>
+            <div class="blog-tags">
+              <span class="tag">博客</span>
+              <span class="tag">开始</span>
+              <span class="tag">分享</span>
+            </div>
+            <a href="#" class="read-more">阅读全文</a>
+          </article>
+          
+          <article class="blog-item" data-category="tech">
+            <div class="blog-meta">
+              <span class="category-tag tech">技术分享</span>
+              <span class="blog-date">2024-01-10</span>
+            </div>
+            <h3>技术学习心得</h3>
+            <p class="blog-excerpt">分享我在学习新技术过程中的一些心得体会和踩坑经验。学习技术不仅仅是掌握语法和API，更重要的是理解背后的设计思想...</p>
+            <div class="blog-tags">
+              <span class="tag">学习</span>
+              <span class="tag">技术</span>
+              <span class="tag">心得</span>
+            </div>
+            <a href="#" class="read-more">阅读全文</a>
+          </article>
+          
+          <article class="blog-item" data-category="project">
+            <div class="blog-meta">
+              <span class="category-tag project">项目总结</span>
+              <span class="blog-date">2024-01-05</span>
+            </div>
+            <h3>项目开发总结</h3>
+            <p class="blog-excerpt">最近完成了一个项目，总结一下开发过程中的收获和反思。这个项目让我学到了很多关于团队协作、代码质量和项目管理的知识...</p>
+            <div class="blog-tags">
+              <span class="tag">项目</span>
+              <span class="tag">总结</span>
+              <span class="tag">开发</span>
+            </div>
+            <a href="#" class="read-more">阅读全文</a>
+          </article>
+          
+          <article class="blog-item" data-category="life">
+            <div class="blog-meta">
+              <span class="category-tag life">生活感悟</span>
+              <span class="blog-date">2024-01-01</span>
+            </div>
+            <h3>新年新开始</h3>
+            <p class="blog-excerpt">新的一年开始了，回顾过去一年的成长和收获，展望未来的目标和计划。生活不仅仅是工作，还有很多值得我们去探索和体验的东西...</p>
+            <div class="blog-tags">
+              <span class="tag">新年</span>
+              <span class="tag">感悟</span>
+              <span class="tag">目标</span>
+            </div>
+            <a href="#" class="read-more">阅读全文</a>
+          </article>
+          
+          <article class="blog-item" data-category="tech">
+            <div class="blog-meta">
+              <span class="category-tag tech">技术分享</span>
+              <span class="blog-date">2023-12-28</span>
+            </div>
+            <h3>前端开发最佳实践</h3>
+            <p class="blog-excerpt">整理了一些前端开发中的最佳实践，包括代码规范、性能优化、可维护性等方面。这些实践能够帮助我们写出更好的代码...</p>
+            <div class="blog-tags">
+              <span class="tag">前端</span>
+              <span class="tag">最佳实践</span>
+              <span class="tag">优化</span>
+            </div>
+            <a href="#" class="read-more">阅读全文</a>
+          </article>
+        </div>
+        
+        <!-- 分页 -->
+        <div class="pagination">
+          <button class="page-btn" disabled>上一页</button>
+          <span class="page-numbers">
+            <button class="page-num active">1</button>
+            <button class="page-num">2</button>
+            <button class="page-num">3</button>
+          </span>
+          <button class="page-btn">下一页</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- JavaScript 脚本 -->
+    <script src="../src/scripts/parallax.js"></script>
+    <script src="../src/scripts/blog.js"></script>
+    <script src="../src/scripts/common.js"></script>
+  </body>
+</html>

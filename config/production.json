@@ -1,0 +1,30 @@
+{
+  "server": {
+    "port": 80,
+    "host": "0.0.0.0",
+    "livereload": false
+  },
+  "paths": {
+    "public": "public",
+    "src": "src",
+    "assets": "src/assets",
+    "styles": "src/styles",
+    "scripts": "src/scripts"
+  },
+  "features": {
+    "hotReload": false,
+    "sourceMap": false,
+    "minification": true
+  },
+  "api": {
+    "baseUrl": "https://yourdomain.com",
+    "timeout": 10000
+  },
+  "optimization": {
+    "gzip": true,
+    "cache": {
+      "maxAge": 31536000,
+      "static": true
+    }
+  }
+}

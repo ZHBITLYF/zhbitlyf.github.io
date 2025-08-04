@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="../src/assets/icons/favicon.jpg" type="image/png" />
+    <title>个人博客 - 项目经历</title>
+    <link rel="stylesheet" href="../src/styles/style.css" />
+  </head>
+  <body>
+    <div class="parallax-background" id="parallax1"></div>
+    
+    <!-- 导航栏 -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="nav-logo">
+          <h2>我的博客</h2>
+        </div>
+        <ul class="nav-menu">
+          <li class="nav-item">
+            <a href="../index.html" class="nav-link">首页</a>
+          </li>
+          <li class="nav-item">
+            <a href="blog.html" class="nav-link">博客</a>
+          </li>
+          <li class="nav-item">
+            <a href="portfolio.html" class="nav-link active">项目经历</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- 主要内容区域 -->
+    <main class="main-content">
+      <div class="content">
+        <!-- 密码输入界面 -->
+        <div id="password-prompt" class="password-container">
+          <h2>🔒 项目经历</h2>
+          <p>此页面包含我的重要作品和项目，需要密码访问</p>
+          <div class="password-form">
+            <input type="password" id="portfolio-password" placeholder="请输入访问密码">
+            <button onclick="checkPassword()">🔓 解锁</button>
+          </div>
+          <p id="password-error" class="error-message"></p>
+          <div class="password-hint">
+            <small>💡 提示：密码包含"作品"和年份</small>
+          </div>
+        </div>
+        
+        <!-- 作品展示内容（默认隐藏） -->
+        <div id="portfolio-content" class="portfolio-content" style="display: none;">
+          <h1>🎨 我的作品集</h1>
+          <p class="portfolio-intro">以下是我在技术学习和实践过程中完成的一些项目作品</p>
+          
+          <!-- 作品分类筛选 -->
+          <div class="portfolio-filters">
+            <button class="filter-btn active" data-filter="all">全部</button>
+            <button class="filter-btn" data-filter="web">Web开发</button>
+            <button class="filter-btn" data-filter="mobile">移动应用</button>
+            <button class="filter-btn" data-filter="tool">工具软件</button>
+          </div>
+          
+          <div class="portfolio-grid">
+            <div class="portfolio-item" data-category="web">
+              <div class="portfolio-image">
+                <div class="placeholder-image">🌐</div>
+              </div>
+              <div class="portfolio-info">
+                <h3>个人博客系统</h3>
+                <p>使用HTML、CSS、JavaScript开发的响应式个人博客，支持文章管理、分类筛选和密码保护功能。</p>
+                <div class="tech-stack">
+                  <span class="tech-tag">HTML5</span>
+                  <span class="tech-tag">CSS3</span>
+                  <span class="tech-tag">JavaScript</span>
+                  <span class="tech-tag">响应式设计</span>
+                </div>
+                <div class="portfolio-links">
+                  <a href="#" class="btn-demo">在线演示</a>
+                  <a href="#" class="btn-code">查看代码</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="portfolio-item" data-category="web">
+              <div class="portfolio-image">
+                <div class="placeholder-image">📊</div>
+              </div>
+              <div class="portfolio-info">
+                <h3>数据可视化工具</h3>
+                <p>基于D3.js开发的交互式数据可视化应用，支持多种图表类型和实时数据更新。</p>
+                <div class="tech-stack">
+                  <span class="tech-tag">D3.js</span>
+                  <span class="tech-tag">SVG</span>
+                  <span class="tech-tag">Canvas</span>
+                  <span class="tech-tag">数据分析</span>
+                </div>
+                <div class="portfolio-links">
+                  <a href="#" class="btn-demo">在线演示</a>
+                  <a href="#" class="btn-code">查看代码</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="portfolio-item" data-category="mobile">
+              <div class="portfolio-image">
+                <div class="placeholder-image">📱</div>
+              </div>
+              <div class="portfolio-info">
+                <h3>移动端应用</h3>
+                <p>使用React Native开发的跨平台移动应用，包含用户认证、数据同步和离线功能。</p>
+                <div class="tech-stack">
+                  <span class="tech-tag">React Native</span>
+                  <span class="tech-tag">Redux</span>
+                  <span class="tech-tag">API集成</span>
+                  <span class="tech-tag">跨平台</span>
+                </div>
+                <div class="portfolio-links">
+                  <a href="#" class="btn-demo">应用截图</a>
+                  <a href="#" class="btn-code">查看代码</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="portfolio-item" data-category="tool">
+              <div class="portfolio-image">
+                <div class="placeholder-image">🛠️</div>
+              </div>
+              <div class="portfolio-info">
+                <h3>开发工具集</h3>
+                <p>自制的开发辅助工具集合，包含代码格式化、文件处理和自动化脚本等功能。</p>
+                <div class="tech-stack">
+                  <span class="tech-tag">Python</span>
+                  <span class="tech-tag">Node.js</span>
+                  <span class="tech-tag">Shell脚本</span>
+                  <span class="tech-tag">自动化</span>
+                </div>
+                <div class="portfolio-links">
+                  <a href="#" class="btn-demo">功能演示</a>
+                  <a href="#" class="btn-code">查看代码</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="portfolio-item" data-category="web">
+              <div class="portfolio-image">
+                <div class="placeholder-image">🎮</div>
+              </div>
+              <div class="portfolio-info">
+                <h3>在线小游戏</h3>
+                <p>使用Canvas和JavaScript开发的在线小游戏，包含物理引擎、碰撞检测和得分系统。</p>
+                <div class="tech-stack">
+                  <span class="tech-tag">Canvas</span>
+                  <span class="tech-tag">JavaScript</span>
+                  <span class="tech-tag">游戏开发</span>
+                  <span class="tech-tag">动画</span>
+                </div>
+                <div class="portfolio-links">
+                  <a href="#" class="btn-demo">开始游戏</a>
+                  <a href="#" class="btn-code">查看代码</a>
+                </div>
+              </div>
+            </div>
+            
+            <div class="portfolio-item" data-category="tool">
+              <div class="portfolio-image">
+                <div class="placeholder-image">📝</div>
+              </div>
+              <div class="portfolio-info">
+                <h3>Markdown编辑器</h3>
+                <p>功能丰富的在线Markdown编辑器，支持实时预览、语法高亮和文档导出。</p>
+                <div class="tech-stack">
+                  <span class="tech-tag">Vue.js</span>
+                  <span class="tech-tag">Markdown</span>
+                  <span class="tech-tag">CodeMirror</span>
+                  <span class="tech-tag">文档处理</span>
+                </div>
+                <div class="portfolio-links">
+                  <a href="#" class="btn-demo">在线使用</a>
+                  <a href="#" class="btn-code">查看代码</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 技能统计 -->
+          <section class="skills-section">
+            <h2>💪 技能统计</h2>
+            <div class="skills-grid">
+              <div class="skill-item">
+                <div class="skill-name">前端开发</div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 85%"></div>
+                </div>
+                <span class="skill-percent">85%</span>
+              </div>
+              <div class="skill-item">
+                <div class="skill-name">JavaScript</div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 80%"></div>
+                </div>
+                <span class="skill-percent">80%</span>
+              </div>
+              <div class="skill-item">
+                <div class="skill-name">React/Vue</div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 75%"></div>
+                </div>
+                <span class="skill-percent">75%</span>
+              </div>
+              <div class="skill-item">
+                <div class="skill-name">Node.js</div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: 70%"></div>
+                </div>
+                <span class="skill-percent">70%</span>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <!-- JavaScript 脚本 -->
+    <script src="../src/scripts/parallax.js"></script>
+    <script src="../src/scripts/portfolio-auth.js"></script>
+    <script src="../src/scripts/portfolio.js"></script>
+    <script src="../src/scripts/common.js"></script>
+  </body>
+</html>

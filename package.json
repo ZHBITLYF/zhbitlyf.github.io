@@ -1,0 +1,31 @@
+{
+  "name": "personal-blog",
+  "version": "1.0.0",
+  "description": "个人博客网站 - 现代化前端项目",
+  "main": "public/index.html",
+  "scripts": {
+    "start": "live-server public --port=3000",
+    "dev": "live-server public --port=3000 --watch=src",
+    "build": "echo 'Build process not configured yet'",
+    "test": "echo 'No tests specified'"
+  },
+  "keywords": [
+    "blog",
+    "portfolio",
+    "personal-website",
+    "frontend",
+    "javascript",
+    "css",
+    "html"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/personal-blog.git"
+  },
+  "homepage": "https://yourusername.github.io/personal-blog"
+}
