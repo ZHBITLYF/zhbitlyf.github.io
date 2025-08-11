@@ -77,16 +77,27 @@
       </div>
     </main>
 
-    <!-- 渲染引擎脚本 -->
-    <script src="src/engine/Engine.js"></script>
+    <!-- 引擎核心模块 - 按依赖顺序加载 -->
+    <script src="src/scripts/engine/Core/Event/EventSystem.js"></script>
+    <script src="src/scripts/engine/Resource/ResourceManager.js"></script>
+    <script src="src/scripts/engine/Core/Object/Component.js"></script>
+    <script src="src/scripts/engine/Core/Object/Transform.js"></script>
+    <script src="src/scripts/engine/Core/Object/RenderComponent.js"></script>
+    <script src="src/scripts/engine/Core/Object/Entity.js"></script>
+    <script src="src/scripts/engine/Scene/SceneManager.js"></script>
+    <script src="src/scripts/engine/Renderer/Shader.js"></script>
+    <script src="src/scripts/engine/Renderer/Material.js"></script>
+    <script src="src/scripts/engine/Renderer/Geometry.js"></script>
+    <script src="src/scripts/engine/Renderer/RenderSystem.js"></script>
+    <script src="src/scripts/engine/Core/GameEngine.js"></script>
+    
+    <!-- 背景渲染器 -->
     <script src="src/scripts/background-renderer.js"></script>
     
     <!-- JavaScript 脚本 -->
     <script src="src/scripts/parallax.js"></script>
     <script src="src/scripts/common.js"></script>
     
-    <!-- 调试脚本 -->
-    <script src="debug-background.js"></script>
     <script>
         // 立即启动背景渲染器
         document.addEventListener('DOMContentLoaded', function() {
