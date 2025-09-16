@@ -1,8 +1,12 @@
+import { Shader } from '../Renderer/Shader.js';
+import { Material } from '../Renderer/Material.js';
+import { Geometry } from '../Renderer/Geometry.js';
+
 /**
  * 资源管理器
  * 管理着色器、纹理、模型等资源的加载和缓存
  */
-class ResourceManager {
+export class ResourceManager {
     constructor() {
         this.shaders = new Map();
         this.textures = new Map();

@@ -2,7 +2,7 @@
  * 材质类
  * 封装着色器和相关参数
  */
-class Material {
+export class Material {
     constructor(shader) {
         this.shader = shader;
         this.uniforms = new Map();

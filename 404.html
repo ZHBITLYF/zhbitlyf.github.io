@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>页面重定向中...</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+        .loading {
+            animation: spin 1s linear infinite;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .container {
+            max-width: 400px;
+            padding: 2rem;
+        }
+        h2 {
+            margin: 0 0 1rem 0;
+            font-size: 1.5rem;
+        }
+        p {
+            margin: 0;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="loading">🔄</div>
+        <h2>页面重定向中...</h2>
+        <p>正在为您跳转到正确的页面</p>
+    </div>
+    
+    <script>
+        // GitHub Pages SPA路由重定向脚本
+        (function() {
+            console.log('GitHub Pages 404重定向启动');
+            
+            // 获取当前路径信息
+            const currentPath = window.location.pathname;
+            const search = window.location.search;
+            const hash = window.location.hash;
+            
+            console.log('当前路径:', currentPath);
+            console.log('查询参数:', search);
+            console.log('哈希:', hash);
+            
+            // 检测是否为GitHub Pages子路径部署
+            const pathSegments = currentPath.split('/').filter(segment => segment !== '');
+            let basePath = '/';
+            let routePath = '';
+            
+            // 如果是子路径部署（如 /username.github.io/repo-name/blog）
+            if (pathSegments.length > 0) {
+                // 检查是否为GitHub Pages仓库路径格式
+                if (pathSegments[0].includes('.github.io') || pathSegments.length > 1) {
+                    // 假设第一个段是仓库名，后面的是路由
+                    if (pathSegments.length > 1) {
+                        basePath = '/' + pathSegments[0] + '/';
+                        routePath = pathSegments.slice(1).join('/');
+                    } else {
+                        routePath = pathSegments[0];
+                    }
+                } else {
+                    // 直接域名部署
+                    routePath = pathSegments.join('/');
+                }
+            }
+            
+            // 如果没有路由路径，默认为home
+            if (!routePath) {
+                routePath = 'home';
+            }
+            
+            console.log('基础路径:', basePath);
+            console.log('路由路径:', routePath);
+            
+            // 构建重定向URL
+            const redirectUrl = basePath + '?spa_redirect=' + encodeURIComponent(routePath) + 
+                               (search ? '&' + search.slice(1) : '') + hash;
+            
+            console.log('重定向到:', redirectUrl);
+            
+            // 显示重定向信息（调试用）
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                console.log('本地开发环境，延迟重定向以便查看日志');
+                setTimeout(() => {
+                    window.location.replace(redirectUrl);
+                }, 1000);
+            } else {
+                // 生产环境立即重定向
+                window.location.replace(redirectUrl);
+            }
+            
+        })();
+    </script>
+</body>
+</html>

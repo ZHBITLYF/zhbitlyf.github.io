@@ -2,7 +2,7 @@
  * 几何体类
  * 管理顶点数据
  */
-class Geometry {
+export class Geometry {
     constructor(gl, vertices, indices = null) {
         this.gl = gl;
         this.vertexBuffer = null;

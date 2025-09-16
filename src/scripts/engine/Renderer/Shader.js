@@ -2,7 +2,7 @@
  * WebGL着色器类
  * 管理顶点着色器和片段着色器的编译和链接
  */
-class Shader {
+export class Shader {
     constructor(gl, vertexSource, fragmentSource) {
         this.gl = gl;
         this.program = null;

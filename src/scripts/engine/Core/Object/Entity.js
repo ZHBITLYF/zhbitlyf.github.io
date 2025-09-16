@@ -2,7 +2,7 @@
  * 实体类
  * ECS架构中的实体，可以添加多个组件
  */
-class Entity {
+export class Entity {
     constructor(name = 'Entity') {
         this.name = name;
         this.components = new Map();

@@ -2,7 +2,7 @@
  * 引擎事件系统
  * 提供发布-订阅模式的事件管理
  */
-class EventSystem {
+export class EventSystem {
     constructor() {
         this.listeners = new Map();
     }

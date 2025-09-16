@@ -2,7 +2,7 @@
  * 组件基类
  * 实现ECS架构中的组件系统
  */
-class Component {
+export class Component {
     constructor(entity) {
         this.entity = entity;
         this.enabled = true;

@@ -9,24 +9,24 @@
   </head>
   <body>
     <!-- WebGL 背景画布 -->
-    <canvas id="webgl-background" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;"></canvas>
+    <canvas id="webgl-background" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></canvas>
     <div class="parallax-background" id="parallax1"></div>
     
     <!-- 导航栏 -->
     <nav class="navbar">
       <div class="nav-container">
         <div class="nav-logo">
-          <h2>我的博客</h2>
+          <h2>个人网站</h2>
         </div>
         <ul class="nav-menu">
           <li class="nav-item">
-            <a href="index.html" class="nav-link active">首页</a>
+            <a href="#" class="nav-link active" data-page="home">首页</a>
           </li>
           <li class="nav-item">
-            <a href="public/blog.html" class="nav-link">博客</a>
+            <a href="#" class="nav-link" data-page="blog">博客</a>
           </li>
           <li class="nav-item">
-            <a href="public/portfolio.html" class="nav-link">项目经历</a>
+            <a href="#" class="nav-link" data-page="portfolio">项目经历</a>
           </li>
         </ul>
       </div>
@@ -34,106 +34,553 @@
 
     <!-- 主要内容区域 -->
     <main class="main-content">
-      <div class="content">
-        <h1 id="greeting">欢迎来到我的个人博客</h1>
-        <p class="intro">这里记录着我的技术分享、生活感悟和创作作品</p>
-        <div class="home-cards">
-          <div class="card" onclick="window.location.href='public/blog.html'">
-            <h3>最新博客</h3>
-            <p>分享最新的技术心得和学习笔记</p>
-            <div class="card-icon">📝</div>
-          </div>
-          <div class="card" onclick="window.location.href='public/portfolio.html'">
-            <h3>项目经历</h3>
-            <p>展示我的项目和创作成果</p>
-            <div class="card-icon">💼</div>
-          </div>
-          <div class="card">
-            <h3>关于我</h3>
-            <p>了解更多关于我的信息</p>
-            <div class="card-icon">👨‍💻</div>
+      <!-- 首页内容 -->
+      <div id="home-page" class="page-content active">
+        <div class="content">
+          <div class="home-cards">
+            <div class="card" data-navigate="blog">
+              <h3>最新博客 <span class="card-icon">📝</span></h3>
+              <p>分享最新的技术心得和学习笔记</p>
+            </div>
+            <div class="card" data-navigate="portfolio">
+              <h3>项目经历 <span class="card-icon">💼</span></h3>
+              <p>展示我的项目和创作成果</p>
+            </div>
+            <div class="card">
+              <h3>关于我 <span class="card-icon">👨‍💻</span></h3>
+              <p>了解更多关于我的信息</p>
+              <div class="contact-info">
+                <p class="email-contact">
+                  <span class="contact-icon">📧</span>
+                  <a href="mailto:1454434401@qq.com">1454434401@qq.com</a>
+                </p>
+              </div>
+            </div>
           </div>
         </div>
-        
-        <!-- 最新文章预览 -->
-        <section class="latest-posts">
-          <h2>最新文章</h2>
-          <div class="posts-preview">
-            <article class="post-preview">
-              <h3><a href="blog.html?id=1">我的第一篇博客</a></h3>
-              <p class="post-date">2024-01-15</p>
-              <p class="post-excerpt">这是我博客的第一篇文章，记录了我开始写博客的初衷和想法...</p>
+      </div>
+
+      <!-- 博客页面内容 -->
+      <div id="blog-page" class="page-content">
+        <div class="content">
+          <!-- 搜索和分类 -->
+          <div class="blog-controls">
+            <div class="search-controls">
+              <div class="search-input-wrapper">
+                <input type="text" placeholder="搜索文章..." id="search-input" class="search-input">
+                <span class="search-icon">🔍</span>
+              </div>
+              <select id="category-select" class="category-select" onchange="filterByCategory()">
+                <option value="all">所有分类</option>
+                <option value="tech">技术分享</option>
+                <option value="life">生活感悟</option>
+                <option value="project">项目总结</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="blog-list" id="blog-list">
+            <article class="blog-item" data-category="tech">
+              <div class="blog-meta">
+                <span class="category-tag tech">技术分享</span>
+                <span class="blog-date">2024-01-15</span>
+              </div>
+              <h3>我的第一篇博客</h3>
+              <p class="blog-excerpt">这是我博客的第一篇文章，记录了我开始写博客的初衷和想法。在这个数字化时代，拥有一个属于自己的博客空间变得越来越重要...</p>
+              <div class="blog-tags">
+                <span class="tag">博客</span>
+                <span class="tag">开始</span>
+                <span class="tag">分享</span>
+              </div>
+              <a href="#" class="read-more">阅读全文</a>
             </article>
-            <article class="post-preview">
-              <h3><a href="blog.html?id=2">技术学习心得</a></h3>
-              <p class="post-date">2024-01-10</p>
-              <p class="post-excerpt">分享我在学习新技术过程中的一些心得体会和踩坑经验...</p>
+            
+            <article class="blog-item" data-category="tech">
+              <div class="blog-meta">
+                <span class="category-tag tech">技术分享</span>
+                <span class="blog-date">2024-01-10</span>
+              </div>
+              <h3>技术学习心得</h3>
+              <p class="blog-excerpt">分享我在学习新技术过程中的一些心得体会和踩坑经验。学习技术不仅仅是掌握语法和API，更重要的是理解背后的设计思想...</p>
+              <div class="blog-tags">
+                <span class="tag">学习</span>
+                <span class="tag">技术</span>
+                <span class="tag">心得</span>
+              </div>
+              <a href="#" class="read-more">阅读全文</a>
+            </article>
+            
+            <article class="blog-item" data-category="project">
+              <div class="blog-meta">
+                <span class="category-tag project">项目总结</span>
+                <span class="blog-date">2024-01-05</span>
+              </div>
+              <h3>项目开发总结</h3>
+              <p class="blog-excerpt">最近完成了一个项目，总结一下开发过程中的收获和反思。这个项目让我学到了很多关于团队协作、代码质量和项目管理的知识...</p>
+              <div class="blog-tags">
+                <span class="tag">项目</span>
+                <span class="tag">总结</span>
+                <span class="tag">开发</span>
+              </div>
+              <a href="#" class="read-more">阅读全文</a>
+            </article>
+            
+            <article class="blog-item" data-category="life">
+              <div class="blog-meta">
+                <span class="category-tag life">生活感悟</span>
+                <span class="blog-date">2024-01-01</span>
+              </div>
+              <h3>新年新开始</h3>
+              <p class="blog-excerpt">新的一年开始了，回顾过去一年的成长和收获，展望未来的目标和计划。生活不仅仅是工作，还有很多值得我们去探索和体验的东西...</p>
+              <div class="blog-tags">
+                <span class="tag">新年</span>
+                <span class="tag">感悟</span>
+                <span class="tag">目标</span>
+              </div>
+              <a href="#" class="read-more">阅读全文</a>
+            </article>
+            
+            <article class="blog-item" data-category="tech">
+              <div class="blog-meta">
+                <span class="category-tag tech">技术分享</span>
+                <span class="blog-date">2023-12-28</span>
+              </div>
+              <h3>前端开发最佳实践</h3>
+              <p class="blog-excerpt">整理了一些前端开发中的最佳实践，包括代码规范、性能优化、可维护性等方面。这些实践能够帮助我们写出更好的代码...</p>
+              <div class="blog-tags">
+                <span class="tag">前端</span>
+                <span class="tag">最佳实践</span>
+                <span class="tag">优化</span>
+              </div>
+              <a href="#" class="read-more">阅读全文</a>
             </article>
           </div>
-          <div class="view-all">
-            <a href="blog.html" class="btn-primary">查看所有文章</a>
+          
+          <!-- 分页 -->
+          <div class="pagination">
+            <button class="page-btn">上一页</button>
+            <span class="page-numbers">
+              <button class="page-num active">1</button>
+              <button class="page-num">2</button>
+              <button class="page-num">3</button>
+            </span>
+            <button class="page-btn">下一页</button>
           </div>
-        </section>
+        </div>
+      </div>
+
+      <!-- 项目经历页面内容 -->
+      <div id="portfolio-page" class="page-content">
+        <div class="content">
+          <div class="portfolio-list">
+            <!-- OPPO AI一键闪记特效 项目 -->
+            <article class="portfolio-card">
+              <div class="portfolio-image">
+                 <img src="src/assets/images/homepage/oppo-flashai.png" alt="OPPO AI一键闪记特效" loading="lazy">
+               </div>
+              <div class="portfolio-content">
+                <h3>OPPO AI一键闪记特效</h3>
+                <p class="portfolio-description">
+                  作为OPPO AI一键闪记革命性产品的核心特效技术负责人，全面主导了行业首创AI智能记录系统的视觉特效架构设计与实现。
+                  基于先进的GPU加速渲染引擎和AI驱动的动效算法，构建了突破性的沉浸式交互特效体系。
+                  通过自主研发的流体动力学模拟算法，实现了极具视觉冲击力的背景水波扫光效果，结合创新的窗口向流体云运动收缩技术，
+                  为用户带来了前所未有的AI记录体验。项目采用高度优化的渲染管线和智能资源调度策略，
+                  在保证60fps流畅运行的同时实现了极低的功耗表现，达到了行业领先的性能标准。
+                  凭借突破性的技术创新和卓越的用户体验，成功申请了核心发明专利，为AI交互领域的视觉特效标准化做出了重要贡献。
+                </p>
+                <div class="portfolio-meta">
+                  <span class="portfolio-date">2025年4月</span>
+                  <div class="tech-stack">
+                    <span class="tech-tag">AI特效</span>
+                    <span class="tech-tag">GPU渲染</span>
+                    <span class="tech-tag">流体模拟</span>
+                    <span class="tech-tag">性能优化</span>
+                    <span class="tech-tag">专利申请</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- FlymeAuto 项目 -->
+            <article class="portfolio-card">
+              <div class="portfolio-image">
+                 <img src="src/assets/images/homepage/FlymeAuto-desktop.png" alt="FlymeAuto桌面效果" loading="lazy">
+               </div>
+              <div class="portfolio-content">
+                <h3>FlymeAuto HMI3D 统一渲染服务</h3>
+                <p class="portfolio-description">
+                  作为FlymeAuto 3D效果统一渲染服务项目的技术架构师和核心开发负责人，全面主导了车机行业首个统一渲染服务平台的设计与实现。
+                  基于AndroidService与Unity引擎的深度融合架构，构建了革命性的车载3D渲染解决方案，实现了真实车模桌面的沉浸式体验。
+                  通过创新的"一镜到底"技术，打通了车辆设置、空调控制等核心功能的无缝交互体验，为用户提供了前所未有的智能座舱视觉效果。
+                  项目涵盖了完整的CI/CD流水线构建、跨平台渲染优化、以及车机专用的性能调优策略。
+                  凭借突破性的技术创新，成功申请了2项核心专利，为车机行业的3D渲染标准化奠定了重要基础。
+                </p>
+                <div class="portfolio-meta">
+                  <span class="portfolio-date">2023年6月</span>
+                  <div class="tech-stack">
+                    <span class="tech-tag">架构设计</span>
+                    <span class="tech-tag">AndroidService</span>
+                    <span class="tech-tag">Unity引擎</span>
+                    <span class="tech-tag">3D渲染</span>
+                    <span class="tech-tag">CI/CD</span>
+                    <span class="tech-tag">专利申请</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- Flyme 10 Alive 项目 -->
+             <article class="portfolio-card">
+               <div class="portfolio-image">
+                 <img src="src/assets/images/homepage/Flyme10-alive.png" alt="Flyme 10 Alive界面" loading="lazy">
+               </div>
+               <div class="portfolio-content">
+                 <h3>Flyme10Alive壁纸</h3>
+                 <p class="portfolio-description">
+                   作为Flyme 10 Alive智能壁纸系统的核心开发负责人，全面主导了从底层引擎架构到产品落地的完整技术实现。
+                   基于自主研发的高性能图形渲染引擎，构建了革命性的3D立体壁纸渲染系统，突破了传统2D壁纸的技术局限。
+                   独立设计并实现了先进的空间几何算法和光影计算模型，配合自研的Web端可视化编辑器，
+                   为设计师提供了直观高效的3D场景构建工具链。通过深度优化的GPU渲染管线和智能资源调度策略，
+                   实现了复杂3D场景在移动设备上的实时渲染，为用户带来了前所未有的沉浸式视觉体验。
+                 </p>
+                 <div class="portfolio-meta">
+                   <span class="portfolio-date">2023年3月</span>
+                   <div class="tech-stack">
+                     <span class="tech-tag">自研引擎</span>
+                     <span class="tech-tag">3D渲染</span>
+                     <span class="tech-tag">算法重构</span>
+                     <span class="tech-tag">Web编辑器</span>
+                     <span class="tech-tag">GPU优化</span>
+                   </div>
+                 </div>
+               </div>
+             </article>
+
+            <!-- Flyme 10 Weather 项目 -->
+             <article class="portfolio-card">
+               <div class="portfolio-image">
+                 <img src="src/assets/images/homepage/Flyme10-weather.png" alt="Flyme 10 天气应用" loading="lazy">
+               </div>
+               <div class="portfolio-content">
+                 <h3>Flyme10天气应用动效&天气壁纸</h3>
+                 <p class="portfolio-description">
+                   作为Flyme 10天气应用动效与智能天气壁纸项目的技术负责人，全面主导了从概念设计到技术实现的完整解决方案。
+                   基于Unity引擎构建了高性能的实时天气可视化系统，通过自主研发的气象数据算法和粒子系统，
+                   实现了与真实天气状态完美同步的沉浸式动态效果。项目涵盖了复杂的物理模拟算法、实时渲染管线优化、
+                   以及智能化的天气识别与视觉映射逻辑。通过精密的性能调优和内存管理策略，
+                   确保了在移动设备上流畅运行的同时保持极致的视觉表现力和用户体验。
+                 </p>
+                 <div class="portfolio-meta">
+                   <span class="portfolio-date">2023年3月</span>
+                   <div class="tech-stack">
+                     <span class="tech-tag">Unity引擎</span>
+                     <span class="tech-tag">算法设计</span>
+                     <span class="tech-tag">物理模拟</span>
+                     <span class="tech-tag">实时渲染</span>
+                     <span class="tech-tag">性能优化</span>
+                   </div>
+                 </div>
+               </div>
+             </article>
+
+            <!-- Flyme 9.3 项目 -->
+            <article class="portfolio-card">
+              <div class="portfolio-image">
+                <img src="src/assets/images/homepage/Flyme9.3.jpg" alt="Flyme 9.3 系统界面" loading="lazy">
+              </div>
+              <div class="portfolio-content">
+                 <h3>Flyme9.3 周年庆Alive壁纸</h3>
+                 <p class="portfolio-description">
+                   作为魅族Flyme 9.3周年庆Alive动态壁纸项目的技术负责人，主导了从算法设计到系统集成的完整技术方案。
+                   基于先进的图形渲染算法和动态效果引擎，开发了具有高度交互性和视觉冲击力的智能壁纸系统。
+                   项目成功交付了三款精心设计的AOD（Always On Display）样式和四款沉浸式桌面动态壁纸，
+                   通过深度优化的渲染管线和智能资源管理，实现了流畅的60fps动画效果同时保持低功耗运行。
+                   产品上线后获得了用户的广泛好评和行业认可，显著提升了系统的视觉体验和品牌价值。
+                 </p>
+                <div class="portfolio-meta">
+                  <span class="portfolio-date">2022年6月</span>
+                  <div class="tech-stack">
+                     <span class="tech-tag">算法设计</span>
+                     <span class="tech-tag">图形渲染</span>
+                     <span class="tech-tag">动效引擎</span>
+                     <span class="tech-tag">性能优化</span>
+                     <span class="tech-tag">系统集成</span>
+                   </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- 西山居技术训练营-迷宫逃亡 项目 -->
+             <article class="portfolio-card">
+               <div class="portfolio-image">
+                 <img src="src/assets/images/homepage/maze.png" alt="西山居技术训练营-迷宫逃亡" loading="lazy">
+               </div>
+              <div class="portfolio-content">
+                <h3>西山居技术训练营-迷宫逃亡</h3>
+                <p class="portfolio-description">
+                  作为西山居首届技术训练营的核心参与者，担任程序员兼技术美术TA的复合型角色，全面负责了这款创新网络游戏的技术架构设计与实现。
+                  基于深度优化的Unity引擎和高性能C++服务器架构，构建了完整的联机逃亡游戏原型系统。
+                  在项目中展现了卓越的跨领域技术能力：从底层Shader编程到前后端框架设计，从图形渲染优化到网络同步机制实现。
+                  通过自主研发的实时网络同步算法和高效的客户端-服务器通信协议，成功实现了流畅的多人在线游戏体验。
+                  项目涵盖了完整的游戏开发流程，包括技术美术管线搭建、渲染效果优化、网络架构设计以及性能调优策略，
+                  为西山居技术训练营树立了技术创新和工程实践的标杆。
+                </p>
+                <div class="portfolio-meta">
+                  <span class="portfolio-date">2021年8月</span>
+                  <div class="tech-stack">
+                    <span class="tech-tag">Unity引擎</span>
+                    <span class="tech-tag">C++服务器</span>
+                    <span class="tech-tag">Shader编程</span>
+                    <span class="tech-tag">网络同步</span>
+                    <span class="tech-tag">技术美术</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <!-- 开拓者·弑神 项目 -->
+             <article class="portfolio-card">
+               <div class="portfolio-image">
+                 <img src="src/assets/images/homepage/pioneer.png" alt="开拓者·弑神" loading="lazy">
+               </div>
+              <div class="portfolio-content">
+                <h3>开拓者·弑神</h3>
+                <p class="portfolio-description">
+                  作为与西山居深度合作的学术项目核心开发者，基于Unity引擎打造了这款具有行业水准的动作游戏作品。
+                  项目展现了在游戏程序设计和关卡架构方面的卓越技术实力，通过精密的动作系统设计和创新的关卡机制实现，
+                  构建了流畅而富有挑战性的游戏体验。在动作程序实现方面，采用了先进的状态机架构和物理引擎优化技术，
+                  实现了精准的角色控制和流畅的战斗反馈系统。关卡设计融合了创新的游戏机制和精心调优的难度曲线，
+                  展现了对游戏设计理论和用户体验的深刻理解。项目不仅体现了扎实的技术功底，
+                  更展现了在产学研合作中快速学习和技术转化的能力，为后续的专业游戏开发奠定了坚实基础。
+                </p>
+                <div class="portfolio-meta">
+                  <span class="portfolio-date">2021年6月</span>
+                  <div class="tech-stack">
+                    <span class="tech-tag">Unity引擎</span>
+                    <span class="tech-tag">动作系统</span>
+                    <span class="tech-tag">关卡设计</span>
+                    <span class="tech-tag">状态机</span>
+                    <span class="tech-tag">物理引擎</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
       </div>
     </main>
 
-    <!-- 引擎核心模块 - 按依赖顺序加载 -->
-    <script src="src/scripts/engine/Core/Event/EventSystem.js"></script>
-    <script src="src/scripts/engine/Resource/ResourceManager.js"></script>
-    <script src="src/scripts/engine/Core/Object/Component.js"></script>
-    <script src="src/scripts/engine/Core/Object/Transform.js"></script>
-    <script src="src/scripts/engine/Core/Object/RenderComponent.js"></script>
-    <script src="src/scripts/engine/Core/Object/Entity.js"></script>
-    <script src="src/scripts/engine/Scene/SceneManager.js"></script>
-    <script src="src/scripts/engine/Renderer/Shader.js"></script>
-    <script src="src/scripts/engine/Renderer/Material.js"></script>
-    <script src="src/scripts/engine/Renderer/Geometry.js"></script>
-    <script src="src/scripts/engine/Renderer/RenderSystem.js"></script>
-    <script src="src/scripts/engine/Core/GameEngine.js"></script>
+    <!-- 使用全局背景管理器，确保背景复用不重复加载 -->
+    <script type="module" src="src/scripts/background-manager.js"></script>
     
-    <!-- 背景渲染器 -->
-    <script src="src/scripts/background-renderer.js"></script>
-    
-    <!-- JavaScript 脚本 -->
+    <!-- SPA路由器 -->
+    <script type="module" src="src/scripts/spa-router.js"></script>
+
+    <!-- 其他 JavaScript 脚本 -->
     <script src="src/scripts/parallax.js"></script>
     <script src="src/scripts/common.js"></script>
     
+    <!-- 页面功能脚本 -->
     <script>
-        // 立即启动背景渲染器
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 DOM加载完成，立即启动背景渲染器');
-            
-            // 等待一小段时间确保脚本加载完成
-            setTimeout(() => {
-                if (window.backgroundRenderer) {
-                    if (!window.backgroundRenderer.isInitialized) {
-                        console.log('🔄 手动启动背景渲染器');
-                        window.backgroundRenderer.init();
-                    }
-                } else {
-                    console.error('❌ 背景渲染器未找到');
-                }
-            }, 100);
-        });
+      // 博客分类筛选功能
+      function filterByCategory() {
+        const select = document.getElementById('category-select');
+        const selectedCategory = select.value;
+        const blogItems = document.querySelectorAll('.blog-item');
         
-        // 检查WebGL背景状态
-        setTimeout(() => {
-            console.log('=== WebGL背景状态检查 ===');
-            console.log('Canvas元素:', document.getElementById('webgl-background'));
-            console.log('背景渲染器:', window.backgroundRenderer);
-            if (window.backgroundRenderer) {
-                console.log('初始化状态:', window.backgroundRenderer.isInitialized);
-                console.log('WebGL上下文:', window.backgroundRenderer.gl);
-                console.log('着色器程序:', window.backgroundRenderer.program);
-                console.log('动画ID:', window.backgroundRenderer.animationId);
-                
-                // 如果还没有启动，强制启动
-                if (!window.backgroundRenderer.isInitialized) {
-                    console.log('🔥 强制启动背景渲染器');
-                    window.backgroundRenderer.init();
+        blogItems.forEach(item => {
+          if (selectedCategory === 'all' || item.dataset.category === selectedCategory) {
+            item.style.display = 'block';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      }
+      
+      // 项目筛选功能已移除
+       document.addEventListener('DOMContentLoaded', function() {
+        
+        // 博客搜索功能
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+          searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const blogItems = document.querySelectorAll('.blog-item');
+            
+            blogItems.forEach(item => {
+              const title = item.querySelector('h3').textContent.toLowerCase();
+              const excerpt = item.querySelector('.blog-excerpt').textContent.toLowerCase();
+              const tags = Array.from(item.querySelectorAll('.tag')).map(tag => tag.textContent.toLowerCase()).join(' ');
+              
+              if (title.includes(searchTerm) || excerpt.includes(searchTerm) || tags.includes(searchTerm)) {
+                item.style.display = 'block';
+              } else {
+                item.style.display = 'none';
+              }
+            });
+          });
+        }
+        
+        // 增强图片灯箱功能
+        (function() {
+            // 创建灯箱模态框
+            const lightbox = document.createElement('div');
+            lightbox.className = 'lightbox';
+            lightbox.innerHTML = `
+                <div class="lightbox-content">
+                    <div class="lightbox-image-container">
+                        <img class="lightbox-image" src="" alt="">
+                    </div>
+                    <button class="lightbox-close">&times;</button>
+                    <div class="lightbox-controls">
+                        <button class="zoom-in">+</button>
+                        <button class="zoom-out">-</button>
+                        <button class="zoom-reset">⌂</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(lightbox);
+            
+            const lightboxImage = lightbox.querySelector('.lightbox-image');
+            const imageContainer = lightbox.querySelector('.lightbox-image-container');
+            const closeBtn = lightbox.querySelector('.lightbox-close');
+            const zoomInBtn = lightbox.querySelector('.zoom-in');
+            const zoomOutBtn = lightbox.querySelector('.zoom-out');
+            const zoomResetBtn = lightbox.querySelector('.zoom-reset');
+            
+            let scale = 1;
+            let isDragging = false;
+            let startX, startY, translateX = 0, translateY = 0;
+            
+            // 为所有项目图片添加点击事件
+            document.addEventListener('click', function(e) {
+                if (e.target.matches('.portfolio-image img')) {
+                    lightboxImage.src = e.target.src;
+                    lightboxImage.alt = e.target.alt;
+                    lightbox.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                    resetImageTransform();
+                }
+            });
+            
+            // 重置图片变换
+            function resetImageTransform() {
+                scale = 1;
+                translateX = 0;
+                translateY = 0;
+                updateImageTransform();
+            }
+            
+            // 更新图片变换
+            function updateImageTransform() {
+                lightboxImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+                lightboxImage.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
+            }
+            
+            // 缩放功能
+            function zoomImage(factor) {
+                const newScale = Math.max(0.5, Math.min(3, scale * factor));
+                if (newScale !== scale) {
+                    scale = newScale;
+                    // 如果缩小到1倍以下，重置位置
+                    if (scale <= 1) {
+                        translateX = 0;
+                        translateY = 0;
+                    }
+                    updateImageTransform();
                 }
             }
-        }, 2000);
+            
+            // 拖拽功能
+            function startDrag(e) {
+                if (scale <= 1) return;
+                isDragging = true;
+                startX = (e.clientX || e.touches[0].clientX) - translateX;
+                startY = (e.clientY || e.touches[0].clientY) - translateY;
+                lightboxImage.style.cursor = 'grabbing';
+                e.preventDefault();
+            }
+            
+            function drag(e) {
+                if (!isDragging || scale <= 1) return;
+                translateX = (e.clientX || e.touches[0].clientX) - startX;
+                translateY = (e.clientY || e.touches[0].clientY) - startY;
+                updateImageTransform();
+                e.preventDefault();
+            }
+            
+            function endDrag() {
+                isDragging = false;
+                lightboxImage.style.cursor = scale > 1 ? 'grab' : 'zoom-in';
+            }
+            
+            // 事件监听
+            zoomInBtn.addEventListener('click', () => zoomImage(1.2));
+            zoomOutBtn.addEventListener('click', () => zoomImage(0.8));
+            zoomResetBtn.addEventListener('click', resetImageTransform);
+            
+            // 滚轮缩放
+            lightbox.addEventListener('wheel', function(e) {
+                if (!lightbox.classList.contains('active')) return;
+                e.preventDefault();
+                const factor = e.deltaY > 0 ? 0.9 : 1.1;
+                zoomImage(factor);
+            });
+            
+            // 图片点击缩放
+            lightboxImage.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (scale === 1) {
+                    zoomImage(2);
+                } else {
+                    resetImageTransform();
+                }
+            });
+            
+            // 鼠标拖拽
+            lightboxImage.addEventListener('mousedown', startDrag);
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', endDrag);
+            
+            // 触摸拖拽
+            lightboxImage.addEventListener('touchstart', startDrag);
+            document.addEventListener('touchmove', drag);
+            document.addEventListener('touchend', endDrag);
+            
+            // 关闭灯箱
+            function closeLightbox() {
+                // 同时开始灯箱背景淡出和图片缩放淡出
+                lightboxImage.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+                lightboxImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(0.6)`;
+                lightboxImage.style.opacity = '0';
+                
+                // 立即移除active类，让灯箱背景也开始淡出
+                lightbox.classList.remove('active');
+                
+                // 延迟恢复页面状态，等待动画完成
+                setTimeout(() => {
+                    document.body.style.overflow = '';
+                    resetImageTransform();
+                    // 重置透明度
+                    lightboxImage.style.opacity = '1';
+                }, 300);
+            }
+            
+            closeBtn.addEventListener('click', closeLightbox);
+            lightbox.addEventListener('click', function(e) {
+                if (e.target === lightbox) {
+                    closeLightbox();
+                }
+            });
+            
+            // ESC键关闭
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+                    closeLightbox();
+                }
+            });
+        })();
+      });
     </script>
   </body>
 </html>

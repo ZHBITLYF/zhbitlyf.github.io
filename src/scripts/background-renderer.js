@@ -10,11 +10,22 @@
  * - Component: 组件系统，实现ECS架构
  */
 
+// ES6模块导入
+import { GameEngine } from './engine/Core/GameEngine.js';
+import { RenderSystem } from './engine/Renderer/RenderSystem.js';
+import { Shader } from './engine/Renderer/Shader.js';
+import { Material } from './engine/Renderer/Material.js';
+import { Geometry } from './engine/Renderer/Geometry.js';
+import { EventSystem } from './engine/Core/Event/EventSystem.js';
+import { ResourceManager } from './engine/Resource/ResourceManager.js';
+import { SceneManager } from './engine/Scene/SceneManager.js';
+import { Component } from './engine/Core/Object/Component.js';
+import { Transform } from './engine/Core/Object/Transform.js';
+import { RenderComponent } from './engine/Core/Object/RenderComponent.js';
+import { Entity } from './engine/Core/Object/Entity.js';
+
 // 测试脚本加载
 console.log('🔧 WebGL游戏引擎脚本已加载');
-
-// 引擎模块将通过 HTML 脚本标签加载
-// 所有类将在全局作用域中可用
 
 /**
  * 背景渲染器
@@ -37,6 +48,9 @@ class SimpleBackgroundRenderer {
         this.frameCount = 0;
         this.fpsStartTime = 0;
         
+        // 统一使用最高性能配置
+        this.performanceLevel = 'high';
+        
         // 默认着色器源码
         this.defaultVertexShader = `
             attribute vec2 a_position;
@@ -49,39 +63,92 @@ class SimpleBackgroundRenderer {
             }
         `;
         
-        this.defaultFragmentShader = `
+        // 根据性能等级选择着色器
+        this.defaultFragmentShader = this.getOptimizedShader();
+    }
+    
+
+    
+    /**
+     * 获取高性能着色器 - 流体波纹效果
+     */
+    getOptimizedShader() {
+        return `
             precision mediump float;
-            
             uniform float u_time;
             varying vec2 v_uv;
             
+            #define S(a,b,t) smoothstep(a,b,t)
+            
+            mat2 Rot(float a) {
+                float s = sin(a);
+                float c = cos(a);
+                return mat2(c, -s, s, c);
+            }
+            
+            // Created by inigo quilez - iq/2014
+            // License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+            vec2 hash(vec2 p) {
+                p = vec2(dot(p, vec2(2127.1, 81.17)), dot(p, vec2(1269.5, 283.37)));
+                return fract(sin(p) * 43758.5453);
+            }
+            
+            float noise(in vec2 p) {
+                vec2 i = floor(p);
+                vec2 f = fract(p);
+                
+                vec2 u = f * f * (3.0 - 2.0 * f);
+                
+                float n = mix(mix(dot(-1.0 + 2.0 * hash(i + vec2(0.0, 0.0)), f - vec2(0.0, 0.0)),
+                                 dot(-1.0 + 2.0 * hash(i + vec2(1.0, 0.0)), f - vec2(1.0, 0.0)), u.x),
+                             mix(dot(-1.0 + 2.0 * hash(i + vec2(0.0, 1.0)), f - vec2(0.0, 1.0)),
+                                 dot(-1.0 + 2.0 * hash(i + vec2(1.0, 1.0)), f - vec2(1.0, 1.0)), u.x), u.y);
+                return 0.5 + 0.5 * n;
+            }
+            
             void main() {
-                vec2 uv = v_uv;
+                vec2 fragCoord = v_uv * vec2(800.0, 600.0); // 模拟分辨率
+                vec2 iResolution = vec2(800.0, 600.0);
+                float iTime = u_time * 0.001;
                 
-                // 创建动态渐变效果
-                float time = u_time * 0.001;
+                vec2 uv = fragCoord / iResolution.xy;
+                float ratio = iResolution.x / iResolution.y;
                 
-                // 基础渐变色
-                vec3 color1 = vec3(0.4, 0.5, 0.9); // 蓝紫色
-                vec3 color2 = vec3(0.5, 0.3, 0.7); // 紫色
-                vec3 color3 = vec3(0.8, 0.4, 0.6); // 粉色
+                vec2 tuv = uv;
+                tuv -= 0.5;
                 
-                // 动态混合
-                float wave1 = sin(uv.x * 3.0 + time) * 0.5 + 0.5;
-                float wave2 = cos(uv.y * 2.0 + time * 0.7) * 0.5 + 0.5;
-                float wave3 = sin((uv.x + uv.y) * 2.5 + time * 1.2) * 0.5 + 0.5;
+                // rotate with Noise
+                float degree = noise(vec2(iTime * 0.1, tuv.x * tuv.y));
                 
-                vec3 finalColor = mix(color1, color2, wave1);
-                finalColor = mix(finalColor, color3, wave2 * 0.6);
+                tuv.y *= 1.0 / ratio;
+                tuv *= Rot(radians((degree - 0.5) * 720.0 + 180.0));
+                tuv.y *= ratio;
                 
-                // 添加一些亮度变化
-                finalColor *= 0.8 + wave3 * 0.3;
+                // Wave warp with sin
+                float frequency = 5.0;
+                float amplitude = 30.0;
+                float speed = iTime * 2.0;
+                tuv.x += sin(tuv.y * frequency + speed) / amplitude;
+                tuv.y += sin(tuv.x * frequency * 1.5 + speed) / (amplitude * 0.5);
                 
-                gl_FragColor = vec4(finalColor, 1.0);
+                // draw the image
+                vec3 colorYellow = vec3(0.957, 0.804, 0.623);
+                vec3 colorDeepBlue = vec3(0.192, 0.384, 0.933);
+                vec3 layer1 = mix(colorYellow, colorDeepBlue, S(-0.3, 0.2, (tuv * Rot(radians(-5.0))).x));
+                
+                vec3 colorRed = vec3(0.910, 0.510, 0.8);
+                vec3 colorBlue = vec3(0.350, 0.71, 0.953);
+                vec3 layer2 = mix(colorRed, colorBlue, S(-0.3, 0.2, (tuv * Rot(radians(-5.0))).x));
+                
+                vec3 finalComp = mix(layer1, layer2, S(0.5, -0.3, tuv.y));
+                
+                vec3 col = finalComp;
+                
+                gl_FragColor = vec4(col, 1.0);
             }
         `;
     }
-    
+
     /**
      * 初始化背景渲染器
      * @param {string} vertexShaderSource - 可选的自定义顶点着色器源码
@@ -95,8 +162,8 @@ class SimpleBackgroundRenderer {
             console.log('📋 步骤1: 创建canvas元素');
             this.createCanvas();
             
-            // 初始化GameEngine
-            console.log('🔧 步骤2: 初始化GameEngine');
+            // 初始化GameEngine（最高性能模式）
+            console.log('🔧 步骤2: 初始化GameEngine (最高性能模式)');
             this.gameEngine = new GameEngine(this.canvas);
             
             // 使用自定义着色器或默认着色器
@@ -120,7 +187,7 @@ class SimpleBackgroundRenderer {
             ];
             const geometry = this.gameEngine.createGeometry('backgroundGeometry', vertices);
             
-            // 创建背景实体并添加组件
+            // 创建背景实体
             console.log('🎯 步骤5: 创建背景实体');
             this.backgroundEntity = this.gameEngine.createEntity('Background');
             
@@ -137,14 +204,14 @@ class SimpleBackgroundRenderer {
             this.gameEngine.start();
             this.startRenderLoop();
             
-            // 监听窗口大小变化
+            // 设置窗口大小监听
             console.log('📏 步骤7: 设置窗口大小监听');
             this.setupResizeHandler();
             
-            // 清除body的背景样式，确保WebGL canvas可见
+            // 设置背景透明
             document.body.style.background = 'transparent';
             
-            // 确保canvas在最前面但不阻挡交互
+            // 确保canvas在最底层
             this.canvas.style.zIndex = '-1';
             this.canvas.style.pointerEvents = 'none';
             
@@ -154,82 +221,79 @@ class SimpleBackgroundRenderer {
         } catch (error) {
             console.error('❌ 背景渲染器初始化失败:', error);
             console.error('错误堆栈:', error.stack);
-            // 临时禁用CSS回退，显示错误信息
+            this.fallbackToCSS();
             alert('WebGL初始化失败: ' + error.message);
-            // this.fallbackToCSS();
         }
     }
-    
+
     /**
      * 更新着色器
-     * @param {string} vertexShaderSource - 顶点着色器源码
-     * @param {string} fragmentShaderSource - 片段着色器源码
      */
     updateShader(vertexShaderSource, fragmentShaderSource) {
         if (!this.gameEngine || !this.gameEngine.isRunning) {
             console.error('❌ 引擎未初始化，无法更新着色器');
             return;
         }
-        
+
         try {
             // 创建新的着色器和材质
             const shader = this.gameEngine.createShader('backgroundShader', vertexShaderSource, fragmentShaderSource);
             const material = this.gameEngine.createMaterial('backgroundMaterial', shader);
             
-            // 更新背景实体的渲染组件
+            // 更新背景实体的材质
             if (this.backgroundEntity) {
                 const renderComponent = this.backgroundEntity.getComponent('RenderComponent');
                 if (renderComponent) {
                     renderComponent.setMaterial(material);
                 }
             }
-            
+
             console.log('✅ 着色器更新成功');
         } catch (error) {
             console.error('❌ 着色器更新失败:', error);
         }
     }
-    
+
     /**
      * 创建canvas元素
      */
     createCanvas() {
-        // 使用已存在的canvas元素
+        // 查找现有的canvas元素
         this.canvas = document.getElementById('webgl-background');
         if (!this.canvas) {
             console.error('❌ 未找到webgl-background canvas元素');
             throw new Error('WebGL canvas元素不存在');
         }
-        
+
         console.log('✅ 找到现有的WebGL canvas元素');
         
-        // 确保canvas样式正确
+        // 设置canvas样式
         this.canvas.style.cssText = `
                 position: fixed;
                 top: 0;
                 left: 0;
                 width: 100%;
                 height: 100%;
-                z-index: -2;
+                z-index: -1;
                 pointer-events: none;
             `;
         
         // 设置canvas尺寸
         this.resizeCanvas();
     }
-    
 
-    
     /**
      * 启动渲染循环
      */
     startRenderLoop() {
-        // 目标帧率设置
-        const targetFPS = 60;
-        const targetFrameTime = 1000 / targetFPS; // 16.67ms per frame
+        // 自适应帧率设置
+        let targetFPS = 60;
+        let targetFrameTime = 1000 / targetFPS;
         let lastFrameTime = 0;
         let frameCount = 0;
         let fpsStartTime = performance.now();
+        let performanceCheckInterval = 5000; // 每5秒检查一次性能
+        let lastPerformanceCheck = performance.now();
         
         const render = (currentTime) => {
             if (!this.isInitialized || !this.gameEngine || !this.gameEngine.isRunning) return;
@@ -237,7 +301,7 @@ class SimpleBackgroundRenderer {
             // 计算帧间隔
             const deltaTime = currentTime - lastFrameTime;
             
-            // 跳帧逻辑：如果距离上一帧时间不足目标帧时间，跳过此帧
+            // 智能跳帧：根据性能动态调整
             if (deltaTime < targetFrameTime) {
                 this.animationId = requestAnimationFrame(render);
                 return;
@@ -254,19 +318,31 @@ class SimpleBackgroundRenderer {
                 const renderComponent = this.backgroundEntity.getComponent('RenderComponent');
                 if (renderComponent && renderComponent.material) {
                     renderComponent.material.setUniform('u_time', animationTime);
-                    // renderComponent.material.setUniform('u_resolution', [this.canvas.width, this.canvas.height]);
                 }
             }
             
             // GameEngine会自动处理渲染
             
-            // FPS统计（每秒输出一次）
+            // 性能监控和自适应调整
             frameCount++;
-            if (currentTime - fpsStartTime >= 1000) {
-                const actualFPS = Math.round((frameCount * 1000) / (currentTime - fpsStartTime));
-                console.log(`🎯 实际FPS: ${actualFPS}, 目标FPS: ${targetFPS}`);
+            if (currentTime - lastPerformanceCheck >= performanceCheckInterval) {
+                const actualFPS = Math.round((frameCount * performanceCheckInterval) / (currentTime - fpsStartTime));
+                
+                // 自适应帧率调整
+                if (actualFPS < 30 && targetFPS > 30) {
+                    targetFPS = 30;
+                    targetFrameTime = 1000 / targetFPS;
+                    console.warn('⚠️ 性能较低，降低目标帧率至30FPS');
+                } else if (actualFPS >= 55 && targetFPS < 60) {
+                    targetFPS = 60;
+                    targetFrameTime = 1000 / targetFPS;
+                    console.log('✅ 性能良好，恢复60FPS');
+                }
+                
+                // 重置计数器
                 frameCount = 0;
                 fpsStartTime = currentTime;
+                lastPerformanceCheck = currentTime;
             }
             
             this.animationId = requestAnimationFrame(render);
@@ -275,7 +351,7 @@ class SimpleBackgroundRenderer {
         // 初始化时间戳
         this.startTime = performance.now();
         this.animationId = requestAnimationFrame(render);
-        console.log('🎬 GameEngine渲染循环已启动 (60FPS + VSync)');
+        console.log('🎬 智能渲染循环已启动 (自适应帧率)');
     }
     
     /**
@@ -288,10 +364,10 @@ class SimpleBackgroundRenderer {
                 this.gameEngine.resize(this.canvas.width, this.canvas.height);
             }
         };
-        
+
         window.addEventListener('resize', resizeHandler);
     }
-    
+
     /**
      * 调整canvas尺寸
      */
@@ -300,12 +376,15 @@ class SimpleBackgroundRenderer {
         const displayWidth = window.innerWidth;
         const displayHeight = window.innerHeight;
         
-        this.canvas.width = displayWidth * dpr;
-        this.canvas.height = displayHeight * dpr;
+        // 使用最高分辨率
+         const resolutionScale = 1.0;
+        
+        this.canvas.width = displayWidth * dpr * resolutionScale;
+        this.canvas.height = displayHeight * dpr * resolutionScale;
         this.canvas.style.width = displayWidth + 'px';
         this.canvas.style.height = displayHeight + 'px';
     }
-    
+
     /**
      * 暂停渲染
      */
@@ -315,7 +394,7 @@ class SimpleBackgroundRenderer {
             this.animationId = null;
         }
     }
-    
+
     /**
      * 恢复渲染
      */
@@ -324,32 +403,32 @@ class SimpleBackgroundRenderer {
             this.startRenderLoop();
         }
     }
-    
+
     /**
      * 销毁渲染器
      */
     destroy() {
         this.pause();
         
-        // 销毁引擎资源
+        // 销毁GameEngine
         if (this.gameEngine) {
             this.gameEngine.destroy();
             this.gameEngine = null;
         }
         
-        // 清理引用
         this.backgroundEntity = null;
         
+        // 移除canvas
         if (this.canvas && this.canvas.parentNode) {
             this.canvas.parentNode.removeChild(this.canvas);
+            this.canvas = null;
         }
         
-        this.isInitialized = false;
         console.log('🗑️ GameEngine背景渲染器已销毁');
     }
-    
+
     /**
-     * CSS回退方案
+     * 回退到CSS背景
      */
     fallbackToCSS() {
         console.log('🔄 使用CSS渐变背景作为回退方案');
@@ -357,86 +436,68 @@ class SimpleBackgroundRenderer {
         // 移除WebGL canvas
         if (this.canvas && this.canvas.parentNode) {
             this.canvas.parentNode.removeChild(this.canvas);
+            this.canvas = null;
         }
         
-        // 恢复CSS背景
         document.body.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
     }
 }
 
-// 创建全局实例
-window.backgroundRenderer = new SimpleBackgroundRenderer();
-
-// 暴露引擎类到全局，方便开发者使用
-window.GameEngine = GameEngine;
-window.RenderSystem = RenderSystem;
-window.Shader = Shader;
-window.Material = Material;
-window.Geometry = Geometry;
-window.EventSystem = EventSystem;
-window.ResourceManager = ResourceManager;
-window.SceneManager = SceneManager;
-window.Component = Component;
-window.Transform = Transform;
-window.RenderComponent = RenderComponent;
-window.Entity = Entity;
-
 /**
- * 等待DOM就绪后初始化
+ * 背景管理器
  */
+class BackgroundManager {
+    constructor() {
+        this.renderer = new SimpleBackgroundRenderer();
+    }
+    
+    getRenderer() {
+        return this.renderer;
+    }
+    
+    async initIfNeeded() {
+        if (!this.renderer.isInitialized) {
+            await this.renderer.init();
+        }
+    }
+}
+
+// 全局背景管理器实例
+window.backgroundManager = window.backgroundManager || new BackgroundManager();
+const backgroundRenderer = window.backgroundManager.getRenderer();
+
+// 初始化函数
 function initWhenReady() {
-    console.log('🚀 开始初始化WebGL引擎背景渲染器');
-    window.backgroundRenderer.init();
+    backgroundRenderer.init();
 }
 
-/**
- * 强制启动背景渲染器
- */
+// 强制启动背景函数
 function forceStartBackground() {
-    console.log('🔥 强制启动背景渲染器');
-    if (window.backgroundRenderer) {
-        if (!window.backgroundRenderer.isInitialized) {
-            console.log('🔄 背景渲染器未初始化，开始初始化...');
-            window.backgroundRenderer.init().catch(error => {
-                console.error('❌ 强制初始化失败:', error);
-                // 使用CSS回退
-                document.body.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-            });
-        } else {
-            console.log('✅ 背景渲染器已初始化');
-            if (!window.backgroundRenderer.animationId) {
-                console.log('🔄 启动渲染循环...');
-                window.backgroundRenderer.resume();
-            }
+    try {
+        if (backgroundRenderer.isInitialized) {
+            console.log('🔄 背景渲染器已初始化，重新启动...');
+            backgroundRenderer.destroy();
         }
+        backgroundRenderer.init();
+    } catch (error) {
+        console.error('❌ 强制启动背景失败:', error);
+        backgroundRenderer.fallbackToCSS();
     }
 }
 
-/**
- * 使用自定义着色器初始化背景渲染器
- * @param {string} vertexShaderSource - 顶点着色器源码
- * @param {string} fragmentShaderSource - 片段着色器源码
- */
+// 自定义着色器初始化函数
 function initWithCustomShader(vertexShaderSource, fragmentShaderSource) {
-    console.log('🎨 使用自定义着色器初始化背景渲染器');
-    if (window.backgroundRenderer) {
-        if (window.backgroundRenderer.isInitialized) {
-            // 如果已初始化，更新着色器
-            window.backgroundRenderer.updateShader(vertexShaderSource, fragmentShaderSource);
+    try {
+        if (backgroundRenderer.isInitialized) {
+            backgroundRenderer.updateShader(vertexShaderSource, fragmentShaderSource);
         } else {
-            // 如果未初始化，使用自定义着色器初始化
-            window.backgroundRenderer.init(vertexShaderSource, fragmentShaderSource).catch(error => {
-                console.error('❌ 自定义着色器初始化失败:', error);
-                // 使用CSS回退
-                document.body.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-            });
+            backgroundRenderer.init(vertexShaderSource, fragmentShaderSource);
         }
+    } catch (error) {
+        console.error('❌ 自定义着色器初始化失败:', error);
+        backgroundRenderer.fallbackToCSS();
     }
 }
-
-// 暴露函数到全局
-window.forceStartBackground = forceStartBackground;
-window.initWithCustomShader = initWithCustomShader;
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initWhenReady);
@@ -444,10 +505,31 @@ if (document.readyState === 'loading') {
     initWhenReady();
 }
 
-// 延迟强制启动
+// 延迟启动备用方案
 setTimeout(() => {
-    if (!window.backgroundRenderer || !window.backgroundRenderer.isInitialized) {
-        console.log('⏰ 3秒后强制启动背景渲染器');
+    if (!backgroundRenderer.isInitialized) {
+        console.warn('⚠️ 背景渲染器初始化超时，尝试强制启动');
         forceStartBackground();
     }
-}, 3000);
+}, 500);
+
+// 导出模块
+export { 
+    backgroundRenderer, 
+    forceStartBackground, 
+    initWithCustomShader, 
+    SimpleBackgroundRenderer,
+    BackgroundManager,
+    GameEngine,
+    RenderSystem,
+    Shader,
+    Material,
+    Geometry,
+    EventSystem,
+    ResourceManager,
+    SceneManager,
+    Component,
+    Transform,
+    RenderComponent,
+    Entity
+};

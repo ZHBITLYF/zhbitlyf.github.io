@@ -1,8 +1,14 @@
+import { Entity } from '../Core/Object/Entity.js';
+import { Component } from '../Core/Object/Component.js';
+import { Transform } from '../Core/Object/Transform.js';
+import { RenderComponent } from '../Core/Object/RenderComponent.js';
+import { EventSystem } from '../Core/Event/EventSystem.js';
+
 /**
  * 场景管理器
  * 管理场景中的所有实体和组件
  */
-class SceneManager {
+export class SceneManager {
     constructor() {
         this.rootEntity = new Entity('Root');
         this.renderQueue = [];

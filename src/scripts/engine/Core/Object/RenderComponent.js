@@ -1,8 +1,10 @@
+import { Component } from './Component.js';
+
 /**
  * 渲染组件
  * 管理实体的渲染相关属性
  */
-class RenderComponent extends Component {
+export class RenderComponent extends Component {
     constructor(entity, material, geometry) {
         super(entity);
         this.material = material;

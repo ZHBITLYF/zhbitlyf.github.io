@@ -1,9 +1,11 @@
 
+import { Component } from './Component.js';
+
 /**
  * 变换组件
  * 管理实体的位置、旋转、缩放
  */
-class Transform extends Component {
+export class Transform extends Component {
     constructor(entity) {
         super(entity);
         this.position = { x: 0, y: 0, z: 0 };
